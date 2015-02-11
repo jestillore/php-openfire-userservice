@@ -2,10 +2,12 @@
 
 namespace Jestillore\PhpOpenfireUserservice;
 
+use SimpleXMLElement;
+
 class PHPOpenfireUserservice {
 
-	public static AUTH_BASIC = 1;
-	public static AUTH_SHARED_KEY = 2;
+	const AUTH_BASIC = 1;
+	const AUTH_SHARED_KEY = 2;
 
 	/*
 		openfire details
@@ -58,13 +60,25 @@ class PHPOpenfireUserservice {
 	}
 
 	private function request ($method, $url, $data = []) {
-
+		switch ($method) {
+			case 'post':
+			case 'put':
+				$c = $this->curl->newRawRequest($method, 
+					$this->endpoint . $url , $this->arrayToXML($data));
+				$c->setHeader('Content-Type', 'application/xml');
+				break;
+			case 'get':
+			case 'delete':
+				$c = $this->curl->newRequest($method, $this->endpoint . $url);
+				break;
+		}
+		$c->setHeader('Authorization', $this->getAuthorization());
+		return $c->send();
 	}
 
 	public function getAllUsers () {
-		/**
-		* TODO
-		*/
+		$users = $this->xmlToArray($this->request('get', '/users'));
+		return $users['user'];
 	}
 
 	public function getUser ($username) {
@@ -151,8 +165,46 @@ class PHPOpenfireUserservice {
 		*/
 	}
 
-	public function test() {
-		return $this->_curl->get('http://www.google.com');
+	private static function arrayToXML($array) {
+		//get root element
+		$root = '';
+		foreach($data as $key => $value) {
+			$root = $key;
+			break;
+		}
+
+		$xml = new SimpleXMLElement('<?xml version="1.0"?><' . $root . '></' . $root . '>');
+
+		$data = $data[$root];
+
+		function array_to_xml($d, &$x) {
+		    foreach($d as $key => $value) {
+		        if(is_array($value)) {
+		            if(!is_numeric($key)){
+		                $subnode = $x->addChild("$key");
+		                array_to_xml($value, $subnode);
+		            }
+		            else{
+		                $subnode = $x->addChild("item$key");
+		                array_to_xml($value, $subnode);
+		            }
+		        }
+		        else {
+		            $x->addChild("$key",htmlspecialchars("$value"));
+		        }
+		    }
+		}
+
+		array_to_xml($data, $xml);
+
+		return $xml->asXML();
+	}
+
+	private static function xmlToArray($xml) {
+		$xml = simplexml_load_string($xml);
+		$json = json_encode($xml);
+		$array = json_decode($json, TRUE);
+		return $array;
 	}
 
 }
