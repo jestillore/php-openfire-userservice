@@ -127,9 +127,10 @@ class PHPOpenfireUserservice {
 	}
 
 	public function getUserGroups ($username) {
-		/**
-		* TODO
-		*/
+		$json = $this->xmlToArray($this->request('get', '/users/' . $username . '/groups'));
+		if (isset($json['groupname']))
+			return $json['groupname'];
+		return $json;
 	}
 
 	public function addUserToGroups ($username, $groups) {
