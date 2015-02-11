@@ -9,7 +9,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.2.*"
+        "illuminate/support": "4.2.*",
+        "anlutro/curl": "dev-master"
     },
     "autoload": {
         "classmap": [
@@ -19,5 +20,5 @@
             "Jestillore\\PhpOpenfireUserservice\\": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev"
 }
