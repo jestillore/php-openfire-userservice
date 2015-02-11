@@ -1,6 +1,8 @@
 # php-openfire-userservice
 Openfire Userservice PHP Wrapper
 
+require ``` "jestillore/php-openfire-userservice": "dev-master" ```
+
 ```
 use Jestillore\PhpOpenfireUserservice\PHPOpenfireUserservice;
 
