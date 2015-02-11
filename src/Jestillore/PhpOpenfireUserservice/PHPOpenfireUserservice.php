@@ -89,7 +89,7 @@ class PHPOpenfireUserservice {
 	public function createUser ($user) {
 		$xml = $this->request('post', '/users', ['user' => $user]);
 		$res = $xml->body;
-		if(is_bool($res))
+		if($xml->code == 201) // successful
 			return new Response(true);
 		return new Response(false, $this->xmlToArray($res));
 	}
@@ -97,7 +97,7 @@ class PHPOpenfireUserservice {
 	public function deleteUser ($username) {
 		$xml = $this->request('delete', '/users/' . $username);
 		$res = $xml->body;
-		if(is_bool($res))
+		if($xml->code == 200) // successful
 			return new Response(true);
 		return new Response(false, $this->xmlToArray($res));
 	}
@@ -105,7 +105,7 @@ class PHPOpenfireUserservice {
 	public function updateUser ($username, $user) {
 		$xml = $this->request('put', '/users/' . $username, ['user' => $user]);
 		$res = $xml->body;
-		if(is_bool($res))
+		if($xml->code == 200) // successful
 			return new Response(true);
 		return new Response(false, $this->xmlToArray($res));
 	}
@@ -113,7 +113,7 @@ class PHPOpenfireUserservice {
 	public function lockUser ($username) {
 		$xml = $this->request('post', '/users/lockouts/' . $username, ['user' => []]);
 		$res = $xml->body;
-		if(is_bool($res))
+		if($xml->code == 201) // successful
 			return new Response(true);
 		return new Response(false, $this->xmlToArray($res));
 	}
@@ -121,7 +121,7 @@ class PHPOpenfireUserservice {
 	public function unlockUser ($username) {
 		$xml = $this->request('delete', '/users/lockouts/' . $username);
 		$res = $xml->body;
-		if(is_bool($res))
+		if($xml->code == 200) // successful
 			return new Response(true);
 		return new Response(false, $this->xmlToArray($res));
 	}

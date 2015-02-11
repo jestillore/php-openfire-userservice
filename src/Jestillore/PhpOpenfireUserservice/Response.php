@@ -20,4 +20,8 @@ class Response {
 		return $this->message;
 	}
 
+	public function __toString() {
+		return 'Request ' . ($this->success ? '' : 'not ') . 'successful! ' . json_encode($this->message);
+	}
+
 }
