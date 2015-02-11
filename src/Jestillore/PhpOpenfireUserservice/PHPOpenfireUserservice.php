@@ -82,15 +82,16 @@ class PHPOpenfireUserservice {
 	}
 
 	public function getUser ($username) {
-		/**
-		* TODO
-		*/
+		$json = $this->xmlToArray($this->request('get', '/users/' . $username));
+		return $json;
 	}
 
 	public function createUser ($user) {
-		/**
-		* TODO
-		*/
+		$xml = $this->request('post', '/users', ['user' => $user]);
+		$res = $xml->body;
+		if(is_bool($res))
+			return new Response(true);
+		return new Response(false, $this->xmlToArray($res));
 	}
 
 	public function deleteUser ($username) {
@@ -165,7 +166,7 @@ class PHPOpenfireUserservice {
 		*/
 	}
 
-	private static function arrayToXML($array) {
+	private static function arrayToXML($data) {
 		//get root element
 		$root = '';
 		foreach($data as $key => $value) {
