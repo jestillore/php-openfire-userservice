@@ -1,6 +1,7 @@
 {
     "name": "jestillore/php-openfire-userservice",
     "description": "",
+    "license": "MIT",
     "authors": [
         {
             "name": "Jillberth Estillore",
