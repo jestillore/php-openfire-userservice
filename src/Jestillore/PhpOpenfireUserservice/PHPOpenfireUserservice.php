@@ -134,9 +134,11 @@ class PHPOpenfireUserservice {
 	}
 
 	public function addUserToGroups ($username, $groups) {
-		/**
-		* TODO
-		*/
+		$xml = $this->request('post', '/users/' . $username . '/groups', ['groups' => ['groupname' => [$groups]]]);
+		$res = $xml->body;
+		if($xml->code == 201) // successful
+			return new Response(true);
+		return new Response(false, $this->xmlToArray($res));
 	}
 
 	public function removeUserFromGroups ($username, $groups) {
@@ -190,7 +192,12 @@ class PHPOpenfireUserservice {
 		function array_to_xml($d, &$x) {
 		    foreach($d as $key => $value) {
 		        if(is_array($value)) {
-		            if(!is_numeric($key)){
+		            if (array_values($value) === $value){
+		                foreach ($value[0] as $v)
+		                    if(!is_array($v))
+		                        $x->addChild($key, $v);
+		            }
+		            else if(!is_numeric($key)){
 		                $subnode = $x->addChild("$key");
 		                array_to_xml($value, $subnode);
 		            }

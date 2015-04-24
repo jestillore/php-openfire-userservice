@@ -155,8 +155,23 @@ Returns an array of groups
 ]
 ```
 
+Add user to groups
+===============
+```
+$groups = array(
+	'group1',
+	'group2'
+);
+$res = $us->unlockUser('username', $groups);
+if($res->isSuccess()) {
+    // user added to groups
+}
+else {
+    // user not added to groups
+}
+```
+
 TODO
-* Add user to groups
 * Remove user from groups
 * Get user by property
 * Get Roster
