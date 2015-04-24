@@ -177,6 +177,29 @@ class PHPOpenfireUserservice {
 		*/
 	}
 
+	private static function array_to_xml($d, &$x) {
+		foreach($d as $key => $value) {
+			if(is_array($value)) {
+				if (array_values($value) === $value){
+					foreach ($value[0] as $v)
+						if(!is_array($v))
+							$x->addChild($key, $v);
+				}
+				else if(!is_numeric($key)){
+					$subnode = $x->addChild("$key");
+					self::array_to_xml($value, $subnode);
+				}
+				else{
+					$subnode = $x->addChild("item$key");
+					self::array_to_xml($value, $subnode);
+				}
+			}
+			else {
+				$x->addChild("$key",htmlspecialchars("$value"));
+			}
+		}
+	}
+
 	private static function arrayToXML($data) {
 		//get root element
 		$root = '';
@@ -189,30 +212,7 @@ class PHPOpenfireUserservice {
 
 		$data = $data[$root];
 
-		function array_to_xml($d, &$x) {
-		    foreach($d as $key => $value) {
-		        if(is_array($value)) {
-		            if (array_values($value) === $value){
-		                foreach ($value[0] as $v)
-		                    if(!is_array($v))
-		                        $x->addChild($key, $v);
-		            }
-		            else if(!is_numeric($key)){
-		                $subnode = $x->addChild("$key");
-		                array_to_xml($value, $subnode);
-		            }
-		            else{
-		                $subnode = $x->addChild("item$key");
-		                array_to_xml($value, $subnode);
-		            }
-		        }
-		        else {
-		            $x->addChild("$key",htmlspecialchars("$value"));
-		        }
-		    }
-		}
-
-		array_to_xml($data, $xml);
+		self::array_to_xml($data, $xml);
 
 		return $xml->asXML();
 	}
