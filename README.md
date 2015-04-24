@@ -162,7 +162,7 @@ $groups = array(
 	'group1',
 	'group2'
 );
-$res = $us->unlockUser('username', $groups);
+$res = $us->addUserToGroups('username', $groups);
 if($res->isSuccess()) {
     // user added to groups
 }
